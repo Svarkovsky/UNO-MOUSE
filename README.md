@@ -2,7 +2,7 @@
 ## A Stack-Based Microcomputer
 ### for Arduino UNO
 
-<br> <div align="center"> <img src="image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image_14.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 🇺🇸 [English](#english) | 🇺🇦 [Українська](#українська)
 
@@ -244,30 +244,32 @@ This project is released under the MIT License. See the source code file (`UNO_M
 
 This project is based on the work by Ivan Svarkovsky (2025).
 
-<br> <div align="center"> <img src="image_11.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 
-### PS2 Keyboard
-PS2-Keyboard pin | Arduino pin
------------------|-----------
-data             | RX (digital pin 0)
-clock            | XCK (digital pin 4)
-ground           | Ground
-5V               | 5V
+## PS2 Keyboard
 
-### TVout
-TVout signal     | Arduino pin
------------------|-----------
-sync             | D9
-video            | D7
-audio            | D11 (через RC-цепь)
-ground           | Ground
+| PS2 Pin | Arduino Pin |
+|---------|-------------|
+| data    | RX (D0)     |
+| clock   | XCK (D4)    |
+| ground  | Ground      |
+| 5V      | 5V          |
+
+## TVout
+
+| TVout Pin | Arduino Pin   |
+|-----------|---------------|
+| sync      | D9            |
+| video     | D7            |
+| audio     | D11 (via RC)   |
+| ground    | Ground        |
 
 # UNO MOUSE
 ## Мікрокомп'ютер на Стековій Основі
 ### для Arduino UNO
 
-<br> <div align="center"> <img src="image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image_11.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 🇺🇸 [English](#english) | 🇺🇦 [Українська](#українська)
 
@@ -509,7 +511,7 @@ Mouse — це стекова мова, що використовує зворо
 
 Цей проєкт базується на роботі Івана Сварковського (2025).
 
-<br> <div align="center"> <img src="image_14.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
-
+<br> <div align="center"> <img src="image_.jpg" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 ---
