@@ -67,9 +67,7 @@ To connect the necessary peripherals to your Arduino UNO:
     *   Video/Sync GND -> Arduino GND
 *   **Audio Output (using TVout library):**
     *   Audio Signal -> Arduino Digital Pin 11
-    *   Connect Pin 11 through a series resistor (e.g., 1kΩ) and a film capacitor (e.g., 0.1µF) to your audio input (e.g., speaker or amplifier). The other side of the capacitor connects to GND.
-
-**Note:** Digital Pin 9 is used by *both* the PS/2 Clock (PS2uartKeyboard) and the TVout Sync signal in the default library configurations. The specific hardware setup for this project likely uses a method to share or separate these signals (e.g., resistors, or custom pin definitions not visible in the main `.ino` file). **Always refer to the specific wiring diagram provided with the project's hardware build instructions** (if available) as the standard library defaults might conflict.
+    *   Connect to pin 11 through a series-connected resistor (1 kΩ) and a film capacitor (0.1 µF) to your audio input (e.g., speaker or amplifier).
 
 ### Building the Project
 
@@ -262,8 +260,11 @@ This project is based on the work by Ivan Svarkovsky (2025).
 |-----------|---------------|
 | sync      | D9            |
 | video     | D7            |
-| audio     | D11 (via RC)   |
+| audio     | D11           |
 | ground    | Ground        |
++-----------+---------------+
+
+<br> <div align="center"> <img src="pin_out.png" alt="pin_out" style="width: 300px; height: auto;"> </div> <br>
 
 # UNO MOUSE
 ## Мікрокомп'ютер на Стековій Основі
@@ -334,9 +335,7 @@ Mouse — це стекова мова, що використовує зворо
     *   GND відео/синхронізації -> Arduino GND
 *   **Аудіовихід (використовує бібліотеку TVout):**
     *   Аудіосигнал -> Цифровий пін Arduino 11
-    *   Підключіть пін 11 через послідовний резистор (наприклад, 1 кОм) та плівковий конденсатор (наприклад, 0.1 мкФ) до вашого аудіовходу (наприклад, динаміка або підсилювача). Інша сторона конденсатора підключається до GND.
-
-**Примітка:** Цифровий пін 9 використовується *як* для тактування PS/2 (PS2uartKeyboard), *так і* для сигналу синхронізації TVout у стандартних конфігураціях бібліотек. Специфічна апаратна реалізація цього проєкту, ймовірно, використовує метод для спільного використання або розділення цих сигналів (наприклад, резистори, або власні визначення пінів, невидимі в основному файлі `.ino`). **Завжди звертайтеся до конкретної схеми підключення, що надається з інструкціями зі збірки апаратної частини проєкту** (якщо такі є), оскільки стандартні налаштування бібліотек можуть конфліктувати.
+    *   Підключіть до піну 11 через послідовно з'єднані резистор (1 кОм) та плівковий конденсатор (0.1 мкФ) до вашого аудіовходу (наприклад, динаміка або підсилювача).
 
 ### Збірка Проєкту
 
