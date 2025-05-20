@@ -265,6 +265,7 @@ This project is based on the work by Ivan Svarkovsky (2025).
 
 
 <br> <div align="center"> <img src="pin_out.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="pin_out_2.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
 
 # UNO MOUSE
 ## Мікрокомп'ютер на Стековій Основі
