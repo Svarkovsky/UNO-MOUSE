@@ -240,7 +240,8 @@ This project is released under the MIT License. See the source code file (`UNO_M
 
 ### Credits
 
-This project is based on the work by Ivan Svarkovsky (2025).
+This project is based on the work by Ivan Svarkovsky (2025) 
+<ivansvarkovsky@gmail.com>
 
 <br> <div align="center"> <img src="image/image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
@@ -725,7 +726,8 @@ Mouse — це стекова мова, що використовує зворо
 
 ### Подяки
 
-Цей проєкт базується на роботі Івана Сварковського (2025).
+Цей проєкт базується на роботі Івана Сварковського (2025)
+<ivansvarkovsky@gmail.com>
 
 ---
 <details>
