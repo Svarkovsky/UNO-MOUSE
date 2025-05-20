@@ -244,6 +244,221 @@ This project is based on the work by Ivan Svarkovsky (2025).
 
 <br> <div align="center"> <img src="image/image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
+---
+<details>
+  <summary>Analysis Code</summary>
+  The code is an implementation of a Mouse programming language interpreter for the Arduino UNO, utilizing the TVout library for graphics and text output and the PS2uartKeyboard library for keyboard input. The code employs numerous low-level techniques and optimizations to minimize RAM usage, critical for microcontrollers like the ATmega328P with only 2 KB of RAM. Below is a detailed breakdown of these approaches, focusing on RAM efficiency and unconventional programming techniques.
+
+### 1. Custom Implementations Replacing Standard Library Functions
+To minimize RAM usage and reduce dependency on the C standard library (`libc`), the code replaces standard functions with compact, custom implementations, reducing memory overhead and optimizing performance.
+
+- **Custom String Functions**:
+  - Standard `<string.h>` functions are replaced with `my_memset`, `my_strcmp`, `my_strlen`, `my_strcat`, and `my_streq`, optimized for minimal stack and RAM usage:
+    - `my_memset`: A simple loop-based implementation for memory filling, avoiding the complexity of standard `memset`.
+    - `my_strcmp`: Returns `int8_t` instead of `int`, saving 1 byte per return value. Uses byte-by-byte comparison with `unsigned char` casting for correct handling of signed chars.
+    - `my_strlen`: Returns `uint8_t` instead of `size_t`, sufficient for `MAX_LINE_LENGTH` (30 characters), fitting in 8 bits.
+    - `my_strcat`: A minimal concatenation function, avoiding temporary buffers.
+    - `my_streq`: An optimized equality check, potentially faster than `my_strcmp == 0` for equal strings due to early termination.
+  - **RAM Savings**: Eliminating `<string.h>` reduces code size and avoids library overhead. Custom functions minimize stack usage by avoiding large local arrays.
+
+- **Custom Character and Number Functions**:
+  - Instead of `<ctype.h>`, functions like `my_isdigit`, `my_isprint`, `my_isspace`, and `my_toupper` are implemented:
+    - `my_isdigit`: Uses subtraction to check the `'0'`–`'9'` range, faster and smaller than standard `isdigit`.
+    - `my_isprint`: Checks printable characters (`' '` to `'~'`) without lookup tables.
+    - `my_isspace`: Handles whitespace (`' '`, `'\t'`, `'\n'`, `'\v'`, `'\f'`, `'\r'`) with a compact condition.
+    - `my_toupper`: Converts lowercase to uppercase by subtracting 32, avoiding conversion tables.
+  - **RAM Savings**: These `inline` functions are inlined by the compiler, eliminating function call overhead (register push/pop). Removing `<ctype.h>` saves code space.
+
+- **Custom Number Parsing and Formatting**:
+  - Instead of `<stdlib.h>`, `my_atol` and `my_itoa` are implemented:
+    - `my_atol`: Parses strings to numbers using `int16_t` instead of `long`, saving 2 bytes per variable, as Mouse numbers are limited to `int8_t` (-128..127).
+    - `my_itoa`: Converts `int8_t` to strings with a 5-byte temporary buffer (for `"-128\0"`), supporting only base 10 to simplify logic.
+  - **RAM Savings**: Using `int16_t` and removing `<stdlib.h>` reduces memory usage and avoids hidden allocations.
+
+### 2. PROGMEM for Static Data Storage
+To conserve RAM, all immutable strings and test programs are stored in flash memory (PROGMEM) instead of RAM.
+
+- **String Storage**:
+  - Constants like `welcome_msg`, `syntax_error_msg`, and `test_program_flash` are defined with `PROGMEM`, stored in the 32 KB flash memory.
+  - Access is handled via `pgm_read_byte` or `pgm_read_byte_near` for byte-by-byte reading from flash.
+  - A custom `my_strlen_P` function calculates PROGMEM string lengths efficiently.
+
+- **Test Program**:
+  - The `test_program_flash` is stored in PROGMEM and loaded into EEPROM during the `TEST` command, avoiding RAM usage.
+
+- **RAM Savings**: Storing strings and data in flash frees hundreds of bytes of RAM. For example, `test_program_flash` (~100 bytes) and error messages (~150 bytes) do not occupy RAM.
+
+### 3. Optimized Data Structures
+The code uses compact data structures tailored for minimal RAM consumption.
+
+- **Stack and Variables**:
+  - The interpreter stack (`stack`) is an `int8_t` array of `STACK_SIZE` (20 elements), using 20 bytes. `int8_t` saves 1–2 bytes per element compared to `int` or `int16_t`.
+  - The variables array (`vars`) uses `int8_t` for 26 variables (A–Z), occupying 26 bytes, matching Mouse’s range constraints.
+  - The call stack (`call_stack`) stores line and position for nested loops/macros, sized `MAX_NESTING` (3) × 2 `uint8_t`, using 6 bytes.
+
+- **Buffers**:
+  - The line buffer (`line_buffer`) is `MAX_LINE_LENGTH + 1` (31 bytes), sufficient for 30 characters plus a null terminator.
+  - The input buffer (`input_buffer`) is 10 bytes, adequate for `int8_t` numbers (e.g., `"-128\0"`).
+  - The temporary buffer in `my_itoa` (`tmp`) is 5 bytes, minimal for `"-128\0"`.
+
+- **RAM Savings**: Using `int8_t`/`uint8_t` saves bytes per element. Compact buffers reduce stack and static memory usage.
+
+### 4. Bit Fields for Flags
+A structure with bit fields is used to store state flags, minimizing RAM usage.
+
+- **Flags Structure**:
+  ```c
+  struct {
+    uint8_t cursor_visible : 1;
+    uint8_t running : 1;
+    uint8_t tracing : 1;
+    uint8_t stack_overflow : 1;
+  } flags = {0, 0, 0, 0};
+  ```
+  - Four flags are packed into a single byte (4 bits used), instead of four `bool` variables (4 bytes).
+
+- **RAM Savings**: Bit fields save 3 bytes compared to separate `bool` variables.
+
+### 5. EEPROM Usage Optimization
+EEPROM stores the program (up to 31 lines of 30 characters) and macros efficiently.
+
+- **Program Storage**:
+  - Each line uses `MAX_LINE_LENGTH + 1` (31 bytes): 30 for characters, 1 for length (`buffer_len`). Total: `31 × 31 = 961 bytes`, fitting within the 1 KB EEPROM.
+  - Storing length avoids null-termination for short strings.
+
+- **Macro Storage**:
+  - Macros are stored starting at `EEPROM_MACRO_DATA_START` (962), with 2-byte addresses (`uint16_t`) for each of 26 macros, using `26 × 2 = 52 bytes`.
+  - A magic value (`EEPROM_MACRO_MAGIC_VALUE`) ensures initialization, preventing invalid data reads.
+
+- **Optimized Operations**:
+  - `EEPROM.update` is used instead of `EEPROM.write` to minimize EEPROM wear.
+  - `scanForMacros` scans EEPROM for macro definitions (`$A`, `$B`, etc.), storing addresses for quick access.
+
+- **RAM Savings**: Storing programs and macros in EEPROM frees RAM. Temporary buffers (`line_buffer`, `scan_buffer`) are reused to avoid additional allocations.
+
+### 6. Inline Functions for Reduced Overhead
+Small functions like `my_isdigit`, `my_isprint`, `my_isspace`, `my_toupper`, `my_atol`, and `my_itoa` are marked `inline`, allowing the compiler to embed their code, avoiding function call overhead.
+
+- **RAM and Stack Savings**: Inlining eliminates stack usage for register push/pop, critical for frequently called functions like `my_isdigit`.
+
+### 7. Minimized Temporary Buffers
+Temporary buffers are kept small and short-lived to reduce RAM usage.
+
+- **In `my_itoa`**:
+  - A 5-byte `tmp` buffer is created on the stack and freed immediately, avoiding global storage.
+  - Digits are generated in reverse, then copied to the output buffer, minimizing computation.
+
+- **In `executeCommand`**:
+  - A 5-byte `num_buf` is used for number parsing, created only when needed.
+
+- **RAM Savings**: Small, stack-based buffers reduce peak stack usage.
+
+### 8. Optimized Stack and Call Stack Management
+The interpreter and call stacks are designed for minimal memory use.
+
+- **Interpreter Stack**:
+  - Limited to `STACK_SIZE = 20`, using 20 bytes. `push` and `pop` check bounds, setting `stack_overflow` to prevent errors.
+
+- **Call Stack**:
+  - Limited to `MAX_NESTING = 3`, storing line and position (`uint8_t`), using 6 bytes.
+
+- **RAM Savings**: Small stack sizes and `uint8_t` usage minimize memory consumption.
+
+### 9. Unconventional Programming Techniques
+The code employs several non-standard approaches:
+
+- **Direct `pgm_read_byte_near` and `pgm_read_ptr` Usage**:
+  - Low-level flash memory access for PROGMEM data (strings, command table) avoids high-level wrappers.
+
+- **Command Table in PROGMEM**:
+  - The `cmd_table` stores `{char, function_pointer}` pairs in flash, enabling efficient command dispatching without RAM usage.
+
+- **Negative Number Handling**:
+  - In `executeCommand`, the parser distinguishes between `'-'` as a subtraction operator and part of a number (e.g., `-123`), reverting `pc` if not followed by a digit.
+
+- **Fill Flag (`fill_flag`)**:
+  - A global `fill_flag` is set by the `F` command and reset after drawing, avoiding stack-based parameter passing.
+
+- **Dynamic Macro Scanning**:
+  - `scanForMacros` locates macro definitions in EEPROM, storing their addresses for efficient invocation.
+
+- **Minimal Global Variables**:
+  - Global variables are limited to ~104 bytes, including `flags` (1 byte), `last_blink` (4 bytes), `line_buffer` (31 bytes), and others.
+
+### 10. Optimized Graphics and Output
+Graphics commands (`P`, `L`, `C`, `R`, `T`, `E`) are implemented efficiently:
+
+- **Compact Commands**:
+  - Use the interpreter stack for parameters, minimizing temporary variables.
+  - Boundary checks (0 ≤ x < 128, 0 ≤ y < 96) are selective to reduce computation.
+
+- **Triangle Drawing**:
+  - The `T` command draws triangles as three lines, avoiding complex fill algorithms to save RAM.
+
+- **Screen Clearing**:
+  - The `E` command clears the screen without parameters, minimizing stack usage.
+
+- **RAM Savings**: Graphics commands reuse the stack, with minimal local variables.
+
+### 11. Input/Output Optimization
+Keyboard and screen handling are optimized:
+
+- **Input Handling**:
+  - `cmd_input` uses a 10-byte `input_buffer` for numbers, with `my_isdigit` and `my_isprint` for validation.
+  - Audio feedback via `playTone` uses different frequencies/durations for actions, enhancing UX without RAM cost.
+
+- **Cursor Blinking**:
+  - `handleCursorBlink` uses `millis()` with a single `last_blink` variable (4 bytes).
+
+- **RAM Savings**: Small buffers and reused `line_buffer` minimize memory usage.
+
+### 12. Free RAM Checking
+The `getFreeRam` function provides insight into available RAM:
+
+```c
+int getFreeRam() {
+  extern int __heap_start, *__brkval;
+  int v;
+  return (int)&v - (__brkval == 0 ? (int)&__heap_start : (int)__brkval);
+}
+```
+- Calculates free RAM by comparing the stack pointer to the heap boundary.
+
+- **RAM Savings**: Uses only one 2-byte local variable.
+
+### 13. Test Program and Debugging
+The `test_program_flash` demonstrates Mouse capabilities:
+
+```c
+const char test_program_flash[] PROGMEM =
+"E\n"                    // Clear screen
+"30 40 25 C\n"           // Circle: center (30,40), radius 25
+"10 15 10 50 40 50 T\n"  // Triangle: vertices (30,15), (10,60), (50,60)
+"60 20 40 40 R\n"        // Rectangle: corner (60,20), 40x40
+"1 F 70 30 20 20 R\n"    // Filled rectangle: corner (70,30), 20x20
+...
+"$$\n"                   // End program
+"RUN\n";
+```
+- Stored in PROGMEM, loaded into EEPROM for execution.
+- Tracing (`{`, `}`) outputs stack contents without additional buffers.
+
+### 14. Error Handling
+Errors are handled efficiently:
+
+- Messages (`SYNTAX ERROR`, `UNMATCHED BRACKET`, etc.) are stored in PROGMEM.
+- Output includes line number and message, minimizing RAM usage.
+
+### RAM Usage Estimate
+- **Global Variables**: ~104 bytes.
+- **Library Objects**: ~300–500 bytes (TVout, PS2uartKeyboard).
+- **Stack/Temporary**: ~100–200 bytes.
+- **Free RAM**: ~1200–1500 bytes (verified by `getFreeRam`).
+
+### Conclusion
+The `UNO_MOUSE.ino` code exemplifies low-level programming for resource-constrained microcontrollers. Key techniques include custom library functions, PROGMEM usage, compact data structures, bit fields, inline functions, and optimized EEPROM handling. Unconventional approaches like dynamic macro scanning and minimal graphics commands highlight the focus on resource efficiency, making the Mouse interpreter viable on the Arduino UNO despite its 2 KB RAM limit.
+</details>
+
 
 ## PS2 Keyboard
 
