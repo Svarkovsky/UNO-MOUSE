@@ -452,9 +452,9 @@ Errors are handled efficiently:
 
 ### RAM Usage Estimate
 - **Global Variables**: ~104 bytes.
-- **Library Objects**: ~300–500 bytes (TVout, PS2uartKeyboard).
-- **Stack/Temporary**: ~100–200 bytes.
-- **Free RAM**: ~1200–1500 bytes (verified by `getFreeRam`).
+- **Library Objects**: ~1612–1688 bytes (TVout, PS2uartKeyboard).
+- **Stack/Temporary**: ~91–151 bytes.
+- **Free RAM**: ~105–241 bytes (verified by `getFreeRam`).
 
 ### Conclusion
 The `UNO_MOUSE.ino` code exemplifies low-level programming for resource-constrained microcontrollers. Key techniques include custom library functions, PROGMEM usage, compact data structures, bit fields, inline functions, and optimized EEPROM handling. Unconventional approaches like dynamic macro scanning and minimal graphics commands highlight the focus on resource efficiency, making the Mouse interpreter viable on the Arduino UNO despite its 2 KB RAM limit.
@@ -936,9 +936,9 @@ const char test_program_flash[] PROGMEM =
 
 ### Оцінка використання RAM
 - **Глобальні змінні**: ~104 байти.
-- **Об’єкти бібліотек**: ~300–500 байтів (TVout, PS2uartKeyboard).
-- **Стек/тимчасові**: ~100–200 байтів.
-- **Вільна RAM**: ~1200–1500 байтів (перевірено через `getFreeRam`).
+- **Об’єкти бібліотек**: ~1612–1688 байтів (TVout, PS2uartKeyboard).
+- **Стек/тимчасові**: ~91–151 байтів.
+- **Вільна RAM**: ~105–241 байтів (перевірено через `getFreeRam`).
 
 ### Висновок
 Код є прикладом низькорівневого програмування для мікроконтролерів з обмеженими ресурсами. Ключові техніки включають кастомні бібліотечні функції, використання PROGMEM, компактні структури даних, бітові поля, inline-функції та оптимізовану роботу з EEPROM. Нестандартні підходи, такі як динамічне сканування макросів і мінімалістичні графічні команди, підкреслюють увагу до економії ресурсів, роблячи інтерпретатор Mouse придатним для Arduino UNO попри обмеження в 2 КБ RAM.  
