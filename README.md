@@ -2,7 +2,7 @@
 ## A Stack-Based Microcomputer
 ### for Arduino UNO
 
-<br> <div align="center"> <img src="image_14.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/image_14.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 🇺🇸 [English](#english) | 🇺🇦 [Українська](#українська)
 
@@ -242,7 +242,7 @@ This project is released under the MIT License. See the source code file (`UNO_M
 
 This project is based on the work by Ivan Svarkovsky (2025).
 
-<br> <div align="center"> <img src="image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/image_9.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 
 ## PS2 Keyboard
@@ -264,14 +264,14 @@ This project is based on the work by Ivan Svarkovsky (2025).
 | ground    | Ground        |
 
 
-<br> <div align="center"> <img src="pin_out.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
-<br> <div align="center"> <img src="pin_out_2.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/pin_out.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/pin_out_2.png" alt="pin_out" style="width: 700px; height: auto;"> </div> <br>
 
 # UNO MOUSE
 ## Мікрокомп'ютер на Стековій Основі
 ### для Arduino UNO
 
-<br> <div align="center"> <img src="image_11.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/image_11.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 🇺🇸 [English](#english) | 🇺🇦 [Українська](#українська)
 
@@ -511,7 +511,10 @@ Mouse — це стекова мова, що використовує зворо
 
 Цей проєкт базується на роботі Івана Сварковського (2025).
 
-<br> <div align="center"> <img src="image_.jpg" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
-<br> <div align="center"> <img src="image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+*   [1](https://en.wikipedia.org/wiki/Mouse_(programming_language))
+*   [2](https://mouse.davidgsimpson.com/index.html)
+  
+<br> <div align="center"> <img src="image/image_.jpg" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
+<br> <div align="center"> <img src="image/image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 
 ---
