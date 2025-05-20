@@ -511,8 +511,15 @@ Mouse — це стекова мова, що використовує зворо
 
 Цей проєкт базується на роботі Івана Сварковського (2025).
 
+---
+Links to resources
 *   [1](https://en.wikipedia.org/wiki/Mouse_(programming_language))
 *   [2](https://mouse.davidgsimpson.com/index.html)
+*   [3](https://techtinkering.com/articles/the-mouse-programming-language-on-cpm/)  
+*   [4](https://mouse.sourceforge.net/)  
+*   [5](http://massmind.org/techref//language/mouse.htm)  
+*   [6](https://news.ycombinator.com/item?id=41400380)
+*   [7](https://archive.org/details/byte-magazine-1979-07/page/n197/mode/2up)
   
 <br> <div align="center"> <img src="image/image_.jpg" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 <br> <div align="center"> <img src="image/image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
