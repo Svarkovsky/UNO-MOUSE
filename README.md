@@ -953,6 +953,7 @@ Links to resources
 *   [5](http://massmind.org/techref//language/mouse.htm)  
 *   [6](https://news.ycombinator.com/item?id=41400380)
 *   [7](https://archive.org/details/byte-magazine-1979-07/page/n197/mode/2up)
+*   [8](https://120years.net/musys-and-mouse-audio-synthesis-language-peter-grogono-untied-kingdom-1965/)
   
 <br> <div align="center"> <img src="image/image_.jpg" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
 <br> <div align="center"> <img src="image/image_12.png" alt="uno_mouse" style="width: 300px; height: auto;"> </div> <br>
